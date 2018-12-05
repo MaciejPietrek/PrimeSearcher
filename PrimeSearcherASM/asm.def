@@ -1,0 +1,23 @@
+; *************************************************************************
+; The LIBRARY statement specifies the executable file as a DLL.
+; *************************************************************************
+LIBRARY PrimeSearchASM
+
+; *************************************************************************
+; The DESCRIPTION statement inserts specified text into the application
+; or DLL. This statement is useful for embedding source-control or 
+; copyright information into a file. The text is a string of up to 255
+; characters enclosed in single or double quotation marks.
+; *************************************************************************
+DESCRIPTION "A prime searching library by Maciej Pietrek."
+                                                                           
+; *************************************************************************
+; The EXPORTS statement defines the names and attributes of the functions
+; and data made available to other applications and DLLs. It also defines
+; the names and attributes of the functions that run with I/O privilege.
+; By , functions and data are hidden from other programs at
+; run-time. A definition is required for each function or data item being
+; exported.
+; *************************************************************************
+EXPORTS
+return1
