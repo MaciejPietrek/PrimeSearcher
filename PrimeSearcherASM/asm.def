@@ -21,3 +21,4 @@ DESCRIPTION "A prime searching library by Maciej Pietrek."
 ; *************************************************************************
 EXPORTS
 return1
+isPrime

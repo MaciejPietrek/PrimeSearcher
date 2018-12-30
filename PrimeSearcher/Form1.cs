@@ -45,39 +45,38 @@ namespace PrimeSearcher
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int lowerBound = int.Parse(textBox1.Text);
-            int upperBound = int.Parse(textBox2.Text);
-
-            bool prime = true;
-
-            textBox3.Text = "";
-            
-            progressBar1.Visible    = true;
-            progressBar1.Minimum    = lowerBound;
-            progressBar1.Maximum    = upperBound;
-            progressBar1.Value      = lowerBound;
-            progressBar1.Step       = 1;
-
-            for (int dividend = lowerBound; dividend <= upperBound; dividend++)
+            try
             {
-                for(int divider = 2; divider <= Math.Sqrt(dividend); divider++)
-                {
-                    if (dividend % divider == 0)
-                    {
-                        prime = false;
-                        divider = dividend;
-                    }
-                }
-                if (prime)
-                {
-                    textBox3.AppendText(dividend.ToString() + System.Environment.NewLine);
-                }
+                int lowerBound = int.Parse(textBox1.Text);
+                int upperBound = int.Parse(textBox2.Text);
 
-                progressBar1.PerformStep();
-                prime = true;
+                if (lowerBound < 2)
+                    throw new Exception("lower bound must be bigger than 1");
+
+                if (lowerBound > upperBound)
+                    throw new Exception("lower bound can't be bigger than upper bound");
+                
+                textBox3.Text = "";
+
+                progressBar1.Visible = true;
+                progressBar1.Minimum = lowerBound;
+                progressBar1.Maximum = upperBound;
+                progressBar1.Value = lowerBound;
+                progressBar1.Step = 1;
+
+                Searcher sear = new Searcher(lowerBound, upperBound, 3, null);
+
+                var table = sear.searchForPrimes();
+
+                for (int i = 0; i < table.Length; i++)
+                    if(table[i]) textBox3.AppendText((i + lowerBound).ToString());
+
+                progressBar1.Visible = false;
             }
-            
-            progressBar1.Visible = false;
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "ERROR DETECTED", MessageBoxButtons.OK);
+            }
         }
     }
 }

@@ -85,6 +85,7 @@
       <SubSystem>Windows</SubSystem>
       <NoEntryPoint>true</NoEntryPoint>
       <OutputFile>C:\Users\macie\source\repos\PrimeSearcher\PrimeSearcher\bin\Debug\PrimeSearcherASM.dll</OutputFile>
+      <AssemblyDebug>true</AssemblyDebug>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -126,6 +127,7 @@
   <ItemGroup>
     <MASM Include="asm.asm">
       <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </MASM>
     <None Include="asm.def" />
   </ItemGroup>
