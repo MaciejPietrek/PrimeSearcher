@@ -44,31 +44,41 @@ namespace PrimeSearcher
 
             this.intigerArray = new int[this.intigerNumber];
             this.resultArray = new bool[this.intigerNumber];
+
+            for(int index_ = 0; index_ < this.intigerNumber; index_++)
+            {
+                intigerArray[index_] = index_ + lowerBound;
+            }
         }
 
-        void taskJob(int indexx)
+        void taskJob(int currentIndex)
         {
             int tmp;
-            indexMutex.WaitOne();
-            if(index + 1 <= intigerNumber)
+            if (indexMutex.WaitOne(Timeout.Infinite))
             {
-                indexMutex.ReleaseMutex();
-                resultArray[indexx] = isPrimeNumber(lowerBound + indexx);
-            }
-            else
-            {
-                index++;
-                tmp = index;
-                indexMutex.ReleaseMutex();
-                taskJob(tmp);
+                if (index + 1 >= intigerNumber)
+                {
+                    indexMutex.ReleaseMutex();
+                    resultArray[currentIndex] = isPrimeNumber(lowerBound + currentIndex);
+                }
+                else
+                {
+                    index++;
+                    tmp = index;
+                    indexMutex.ReleaseMutex();
+                    resultArray[currentIndex] = isPrimeNumber(lowerBound + currentIndex);
+                    taskJob(tmp);
+                }
             }
         }
 
         public bool[] searchForPrimes()
         {
-            for(int numberOfThreads = 0; numberOfThreads <= maxThreadNumber; numberOfThreads++)
+            int help;
+            for(int numberOfThread = 0; numberOfThread < maxThreadNumber; numberOfThread++)
             {
-                taskList.Add(Task.Factory.StartNew(() => taskJob(numberOfThreads)));
+                help = numberOfThread;
+                taskList.Add(Task.Factory.StartNew(() => taskJob(help)));
             }
             Task.WaitAll(taskList.ToArray());
             return resultArray;

@@ -69,7 +69,7 @@ namespace PrimeSearcher
                 var table = sear.searchForPrimes();
 
                 for (int i = 0; i < table.Length; i++)
-                    if(table[i]) textBox3.AppendText((i + lowerBound).ToString());
+                    if(table[i]) textBox3.AppendText((i + lowerBound).ToString() + Environment.NewLine);
 
                 progressBar1.Visible = false;
             }
