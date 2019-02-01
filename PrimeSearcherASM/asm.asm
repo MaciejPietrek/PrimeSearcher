@@ -27,11 +27,6 @@ isPrime proc number : DWORD
 	push ebx			; Secures the ebx register value
 	mov ecx, 1			; In ecx will be the divisors kept
 	mov ebx, number		; Stores the tested intiger in this register
-;	mov ebx, [ebx]
-
-checkIfEqualToTwo:		;
-	cmp ebx, 2			;
-	je isDivisible		;
 
 incrementDivisor:		; Increments the divisor
 	inc ecx				; Increments the ecx register which contains the divisor
@@ -47,6 +42,11 @@ checkDivisible:			; Checks if the remainder is 0 (the divider is divisible by th
 	cmp edx, 0			; Compares the reminder to 0
 	je isDivisible		; If zero -> is divisible -> move to isDivisible
 
+CheckSquareRoot:		; Checks if the number returned is bigger than the divisor if true then we've checked a bigger number
+						; than the square root of tested number
+	cmp eax, ecx		; Checks if the divisor (ecx) is bigger than the result of div operation (eax)
+	jb isPrimeEt		;
+
 isNotDivisible:			; Is not divisible
 	jmp incrementDivisor; Moves to increament the divisor and continue the next loop
 
@@ -58,7 +58,8 @@ isDivisible:			; Is divisible
 isPrimeEt:				; Is prime 
 	mov eax, 1			; Moves 1 to eax (acumulator) which means the number is prime
 	pop ebx				; Restores the ebx value
-	ret
+
+ 	ret
 
 isPrime endp
 end

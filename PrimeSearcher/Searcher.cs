@@ -12,89 +12,66 @@ namespace PrimeSearcher
 {
     public class Searcher
     {
-        [DllImport("PrimeSearcherASM.dll", CallingConvention = CallingConvention.StdCall)]
-            private static extern int isPrime(int number);
-
         Mutex indexMutex;
 
-        int index;
-
-        int lowerBound;
-        int upperBound;
-        int intigerNumber;
-        int maxThreadNumber;
-
         List<Task> taskList;
+        iTester tester;
 
-        int[] intigerArray;
+        #region OTHER STUFF
+
+        int index;
+        readonly int lowerBound;
+        readonly int upperBound;
+        readonly int intigerNumber;
+        readonly int maxThreadNumber;
         bool[] resultArray;
+   
+        #endregion
 
-        public Searcher(int lowerBound, int upperBound, int maxThreadNumber, PrimeTester tester)
+        public Searcher(int lowerBound, int upperBound, int maxThreadNumber, iTester tester)
         {
-            this.indexMutex = new Mutex(false);
-
-            this.index = 0;
-
-            this.lowerBound = lowerBound;
-            this.upperBound = upperBound;
-            this.intigerNumber = upperBound - lowerBound + 1;
-            this.maxThreadNumber = maxThreadNumber;
-            
-            this.taskList = new List<Task>();
-
-            this.intigerArray = new int[this.intigerNumber];
-            this.resultArray = new bool[this.intigerNumber];
-
-            for(int index_ = 0; index_ < this.intigerNumber; index_++)
-            {
-                intigerArray[index_] = index_ + lowerBound;
-            }
+            this.indexMutex         = new Mutex(false);
+            this.index              = 0;
+            this.lowerBound         = lowerBound;
+            this.upperBound         = upperBound;
+            this.intigerNumber      = upperBound - lowerBound + 1;
+            this.maxThreadNumber    = maxThreadNumber;
+            this.taskList           = new List<Task>();
+            this.tester             = tester;
+            this.resultArray        = new bool[this.intigerNumber];
         }
 
         void taskJob(int currentIndex)
         {
-            int tmp;
-            if (indexMutex.WaitOne(Timeout.Infinite))
+            while(currentIndex < intigerNumber)
             {
-                if (index + 1 >= intigerNumber)
+                indexMutex.WaitOne(Timeout.Infinite);
+                currentIndex = index;
+                index++;
+                indexMutex.ReleaseMutex();
+                if(currentIndex >= intigerNumber)
                 {
-                    indexMutex.ReleaseMutex();
-                    resultArray[currentIndex] = isPrimeNumber(lowerBound + currentIndex);
+                    return;
                 }
-                else
-                {
-                    index++;
-                    tmp = index;
-                    indexMutex.ReleaseMutex();
-                    resultArray[currentIndex] = isPrimeNumber(lowerBound + currentIndex);
-                    taskJob(tmp);
-                }
+                resultArray[currentIndex] = IsPrime(lowerBound + currentIndex);
             }
         }
 
-        public bool[] searchForPrimes()
+        public bool[] Proceed()
         {
-            int help;
-            for(int numberOfThread = 0; numberOfThread < maxThreadNumber; numberOfThread++)
+            ParallelOptions options = new ParallelOptions();
+            options.MaxDegreeOfParallelism = maxThreadNumber;
+
+            Parallel.For(0, intigerNumber, options, index =>
             {
-                help = numberOfThread;
-                taskList.Add(Task.Factory.StartNew(() => taskJob(help)));
-            }
-            Task.WaitAll(taskList.ToArray());
+                resultArray[index] = IsPrime(lowerBound + index);
+            });
             return resultArray;
         }
 
-        public bool isPrimeNumber(int number)
+        public bool IsPrime(int number)
         {
-
-            if (isPrime(number) == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return tester.IsPrime(number);
         }
     }
 }

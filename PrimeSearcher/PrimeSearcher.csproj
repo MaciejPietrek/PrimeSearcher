@@ -36,6 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,7 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PrimeTester.cs" />
+    <Compile Include="Format.cs" />
+    <Compile Include="Formator.cs" />
+    <Compile Include="Messenger.cs" />
+    <Compile Include="PrimeTesterASM.cs" />
+    <Compile Include="PrimeTesterCsharp.cs" />
+    <Compile Include="iPrimeTester.cs" />
     <Compile Include="Searcher.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
